@@ -1,3 +1,4 @@
 rootProject.name = "mockito-ut-helper"
 include("app")
-include("sut")
+include("annotation-processor")
+include("annotation")

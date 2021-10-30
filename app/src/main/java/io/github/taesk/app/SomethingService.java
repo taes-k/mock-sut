@@ -14,7 +14,8 @@ public class SomethingService {
         this.sampleService3 = sampleService3;
     }
 
-    public void doSomething() {
+    public String doSomething() {
         System.out.println(sampleService1.getSample());
+        return sampleService1.getSample();
     }
 }

@@ -1,7 +1,7 @@
 package io.github.taesk.app;
 
-public class SampleService1 {
+public class SampleService4 {
     public String getSample(){
-        return "sample1";
+        return "sample4";
     }
 }

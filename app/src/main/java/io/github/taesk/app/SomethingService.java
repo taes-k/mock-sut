@@ -7,15 +7,39 @@ public class SomethingService {
     private final SampleService1 sampleService1;
     private final SampleService2 sampleService2;
     private final SampleService3 sampleService3;
+    private final SampleService4 sampleService4;
+    private final SampleService5 sampleService5;
 
-    public SomethingService(SampleService1 sampleService1, SampleService2 sampleService2, SampleService3 sampleService3) {
+    public SomethingService(
+        SampleService1 sampleService1,
+        SampleService2 sampleService2,
+        SampleService3 sampleService3,
+        SampleService4 sampleService4,
+        SampleService5 sampleService5) {
         this.sampleService1 = sampleService1;
         this.sampleService2 = sampleService2;
         this.sampleService3 = sampleService3;
+        this.sampleService4 = sampleService4;
+        this.sampleService5 = sampleService5;
     }
 
-    public String doSomething() {
-        System.out.println(sampleService1.getSample());
-        return sampleService1.getSample();
+    public String joinAllSamples() {
+        var sample1 = sampleService1.getSample();
+        var sample2 = sampleService2.getSample();
+        var sample3 = sampleService3.getSample();
+        var sample4 = sampleService4.getSample();
+        var sample5 = sampleService5.getSample();
+
+        return String.join(sample1, sample2, sample3, sample4, sample5);
+    }
+
+    public String joinAllSamplesUppercase() {
+        var sample1 = sampleService1.getSample().toUpperCase();
+        var sample2 = sampleService2.getSample();
+        var sample3 = sampleService3.getSample();
+        var sample4 = sampleService4.getSample();
+        var sample5 = sampleService5.getSample();
+
+        return String.join(sample1, sample2, sample3, sample4, sample5).toUpperCase();
     }
 }

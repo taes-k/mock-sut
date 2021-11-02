@@ -1,26 +1,65 @@
 package io.github.taesk;
 
-import io.github.taesk.app.SomethingService;
-import io.github.taesk.app.SomethingServiceSutFactory;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class SomethingServiceTest {
-    private SomethingServiceSutFactory sutFactory = new SomethingServiceSutFactory();
-    SomethingService sut = sutFactory.getSut();
+import io.github.taesk.app.SomethingService;
+import io.github.taesk.app.SomethingServiceMockSutFactory;
+
+class SomethingServiceTest {
+    private final SomethingServiceMockSutFactory sutFactory = new SomethingServiceMockSutFactory();
+    private final SomethingService sut = sutFactory.getSut();
+
+    @BeforeEach
+    void beforeEach() {
+        sutFactory.reset();
+    }
 
     @Test
-    void test() {
+    void joinAllSamples() {
         // given
-        var mkMessage = "mockMessage";
-        Mockito.when(sutFactory.getSampleService1().getSample()).thenReturn(mkMessage);
+        var mkSample1 = RandomStringUtils.random(5);
+        var mkSample2 = RandomStringUtils.random(5);
+        var mkSample3 = RandomStringUtils.random(5);
+        var mkSample4 = RandomStringUtils.random(5);
+        var mkSample5 = RandomStringUtils.random(5);
+
+        Mockito.when(sutFactory.getSampleService1().getSample()).thenReturn(mkSample1);
+        Mockito.when(sutFactory.getSampleService2().getSample()).thenReturn(mkSample2);
+        Mockito.when(sutFactory.getSampleService3().getSample()).thenReturn(mkSample3);
+        Mockito.when(sutFactory.getSampleService4().getSample()).thenReturn(mkSample4);
+        Mockito.when(sutFactory.getSampleService5().getSample()).thenReturn(mkSample5);
 
         // when
-        var result = sut.doSomething();
+        var result = sut.joinAllSamples();
 
         // then
-        Assertions.assertEquals(result, mkMessage);
+        Assertions.assertEquals(String.join(mkSample1, mkSample2, mkSample3, mkSample4, mkSample5), result);
+    }
+
+    @Test
+    void joinAllSamplesUppercase() {
+        // given
+        var mkSample1 = RandomStringUtils.random(5);
+        var mkSample2 = RandomStringUtils.random(5);
+        var mkSample3 = RandomStringUtils.random(5);
+        var mkSample4 = RandomStringUtils.random(5);
+        var mkSample5 = RandomStringUtils.random(5);
+
+        Mockito.when(sutFactory.getSampleService1().getSample()).thenReturn(mkSample1);
+        Mockito.when(sutFactory.getSampleService2().getSample()).thenReturn(mkSample2);
+        Mockito.when(sutFactory.getSampleService3().getSample()).thenReturn(mkSample3);
+        Mockito.when(sutFactory.getSampleService4().getSample()).thenReturn(mkSample4);
+        Mockito.when(sutFactory.getSampleService5().getSample()).thenReturn(mkSample5);
+
+        // when
+        var result = sut.joinAllSamplesUppercase();
+
+        // then
+        Assertions.assertEquals(String.join(mkSample1, mkSample2, mkSample3, mkSample4, mkSample5).toUpperCase(), result);
 
     }
 }

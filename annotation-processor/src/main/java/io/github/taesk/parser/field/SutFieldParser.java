@@ -1,7 +1,8 @@
-package io.github.taesk.parser;
+package io.github.taesk.parser.field;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
+import io.github.taesk.parser.Parser;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;

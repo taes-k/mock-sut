@@ -1,8 +1,11 @@
-package io.github.taesk.parser;
+package io.github.taesk.parser.constructor;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
+import io.github.taesk.parser.Parser;
+import io.github.taesk.parser.field.MockFieldParser;
+
 import org.mockito.Mockito;
 
 import javax.lang.model.element.Modifier;

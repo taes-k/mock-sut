@@ -13,9 +13,6 @@ repositories {
 sourceSets.main {
     java.srcDirs("src/main/java", "src/main/kotlin", "build/generated/sources/annotationProcessor/java/main")
 }
-sourceSets.test {
-    java.srcDirs("src/test/java", "src/test/kotlin", "build/generated/sources/annotationProcessor/java/test")
-}
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
@@ -31,6 +28,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.31")
     implementation("org.mockito:mockito-all:1.10.19")
+    implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("org.apache.commons:commons-collections4:4.4")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")

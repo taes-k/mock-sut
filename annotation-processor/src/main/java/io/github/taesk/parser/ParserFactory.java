@@ -2,6 +2,12 @@ package io.github.taesk.parser;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import io.github.taesk.parser.constructor.ConstructorParser;
+import io.github.taesk.parser.field.MockFieldParser;
+import io.github.taesk.parser.field.SutFieldParser;
+import io.github.taesk.parser.method.GetterMethodParser;
+import io.github.taesk.parser.method.ResetMethodParser;
+
 import org.apache.commons.collections4.ListUtils;
 
 import javax.lang.model.element.TypeElement;
@@ -19,10 +25,18 @@ public class ParserFactory {
     }
 
     public List<FieldSpec> getFieldSpecs() {
-        var mockFields = mockFieldParser.invoke();
-        var sutFields = sutFieldParser.invoke();
+        var mockFields = getMockFieldSpecs();
+        var sutFields = getSutFieldSpec();
 
         return ListUtils.union(mockFields, List.of(sutFields));
+    }
+
+    private List<FieldSpec> getMockFieldSpecs(){
+        return mockFieldParser.invoke();
+    }
+
+    private FieldSpec getSutFieldSpec(){
+        return sutFieldParser.invoke();
     }
 
     public MethodSpec getConstructorSpec() {
@@ -31,5 +45,9 @@ public class ParserFactory {
 
     public List<MethodSpec> getGetterMethodSpecs() {
         return new GetterMethodParser(getFieldSpecs()).invoke();
+    }
+
+    public MethodSpec getResetMethodSpecs() {
+        return new ResetMethodParser(getMockFieldSpecs()).invoke();
     }
 }

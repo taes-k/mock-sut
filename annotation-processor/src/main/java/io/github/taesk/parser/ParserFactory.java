@@ -7,10 +7,10 @@ import io.github.taesk.parser.field.MockFieldParser;
 import io.github.taesk.parser.field.SutFieldParser;
 import io.github.taesk.parser.method.GetterMethodParser;
 import io.github.taesk.parser.method.ResetMethodParser;
-
 import org.apache.commons.collections4.ListUtils;
 
 import javax.lang.model.element.TypeElement;
+import java.util.Collections;
 import java.util.List;
 
 public class ParserFactory {
@@ -25,17 +25,17 @@ public class ParserFactory {
     }
 
     public List<FieldSpec> getFieldSpecs() {
-        var mockFields = getMockFieldSpecs();
-        var sutFields = getSutFieldSpec();
+        List<FieldSpec> mockFields = getMockFieldSpecs();
+        FieldSpec sutFields = getSutFieldSpec();
 
-        return ListUtils.union(mockFields, List.of(sutFields));
+        return ListUtils.union(mockFields, Collections.singletonList(sutFields));
     }
 
-    private List<FieldSpec> getMockFieldSpecs(){
+    private List<FieldSpec> getMockFieldSpecs() {
         return mockFieldParser.invoke();
     }
 
-    private FieldSpec getSutFieldSpec(){
+    private FieldSpec getSutFieldSpec() {
         return sutFieldParser.invoke();
     }
 

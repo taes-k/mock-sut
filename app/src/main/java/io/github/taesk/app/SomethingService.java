@@ -11,11 +11,11 @@ public class SomethingService {
     private final SampleService5 sampleService5;
 
     public SomethingService(
-        SampleService1 sampleService1,
-        SampleService2 sampleService2,
-        SampleService3 sampleService3,
-        SampleService4 sampleService4,
-        SampleService5 sampleService5) {
+            SampleService1 sampleService1,
+            SampleService2 sampleService2,
+            SampleService3 sampleService3,
+            SampleService4 sampleService4,
+            SampleService5 sampleService5) {
         this.sampleService1 = sampleService1;
         this.sampleService2 = sampleService2;
         this.sampleService3 = sampleService3;
@@ -24,21 +24,21 @@ public class SomethingService {
     }
 
     public String joinAllSamples() {
-        var sample1 = sampleService1.getSample();
-        var sample2 = sampleService2.getSample();
-        var sample3 = sampleService3.getSample();
-        var sample4 = sampleService4.getSample();
-        var sample5 = sampleService5.getSample();
+        String sample1 = sampleService1.getSample();
+        String sample2 = sampleService2.getSample();
+        String sample3 = sampleService3.getSample();
+        String sample4 = sampleService4.getSample();
+        String sample5 = sampleService5.getSample();
 
         return String.join(sample1, sample2, sample3, sample4, sample5);
     }
 
     public String joinAllSamplesUppercase() {
-        var sample1 = sampleService1.getSample().toUpperCase();
-        var sample2 = sampleService2.getSample();
-        var sample3 = sampleService3.getSample();
-        var sample4 = sampleService4.getSample();
-        var sample5 = sampleService5.getSample();
+        String sample1 = sampleService1.getSample().toUpperCase();
+        String sample2 = sampleService2.getSample();
+        String sample3 = sampleService3.getSample();
+        String sample4 = sampleService4.getSample();
+        String sample5 = sampleService5.getSample();
 
         return String.join(sample1, sample2, sample3, sample4, sample5).toUpperCase();
     }

@@ -2,6 +2,7 @@ package io.github.taesk.parser;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import com.sun.source.util.Trees;
 import io.github.taesk.parser.constructor.ConstructorParser;
 import io.github.taesk.parser.field.MockFieldParser;
 import io.github.taesk.parser.field.SutFieldParser;
@@ -18,8 +19,8 @@ public class ParserFactory {
     private final SutFieldParser sutFieldParser;
     private final ConstructorParser constructorParser;
 
-    public ParserFactory(TypeElement element) {
-        mockFieldParser = new MockFieldParser(element);
+    public ParserFactory(TypeElement element, Trees trees) {
+        mockFieldParser = new MockFieldParser(element, trees);
         sutFieldParser = new SutFieldParser(element);
         constructorParser = new ConstructorParser(element, mockFieldParser);
     }

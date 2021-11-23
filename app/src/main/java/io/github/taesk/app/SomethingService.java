@@ -11,11 +11,11 @@ public class SomethingService {
     private final SampleService5 sampleService5;
 
     public SomethingService(
-            SampleService1 sampleService1,
-            SampleService2 sampleService2,
-            SampleService3 sampleService3,
-            SampleService4 sampleService4,
-            SampleService5 sampleService5) {
+        SampleService1 sampleService1,
+        SampleService2 sampleService2,
+        SampleService3 sampleService3,
+        SampleService4 sampleService4,
+        SampleService5 sampleService5) {
         this.sampleService1 = sampleService1;
         this.sampleService2 = sampleService2;
         this.sampleService3 = sampleService3;

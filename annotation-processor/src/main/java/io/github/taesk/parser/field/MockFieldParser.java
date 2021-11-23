@@ -47,7 +47,6 @@ public class MockFieldParser implements Parser<List<FieldSpec>> {
         return getConstructorFieldSpecs();
     }
 
-    @NotNull
     private List<FieldSpec> getConstructorFieldSpecs() {
         long constructorCount = element.getEnclosedElements().stream()
                 .filter(it -> it.getKind() == ElementKind.CONSTRUCTOR && it.getModifiers().contains(Modifier.PUBLIC))
@@ -73,7 +72,6 @@ public class MockFieldParser implements Parser<List<FieldSpec>> {
         return getFieldSpecs(constructorElement);
     }
 
-    @NotNull
     private List<FieldSpec> getAllFieldSpecs() {
         return element.getEnclosedElements().stream()
                 .filter(it -> it.getKind().isField())
@@ -82,13 +80,12 @@ public class MockFieldParser implements Parser<List<FieldSpec>> {
                             TypeName paramType = TypeName.get(it.asType());
 
                             return FieldSpec.builder(paramType, paramName)
-                                    .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                                    .addModifiers(Modifier.PRIVATE)
                                     .build();
                         }
                 ).collect(Collectors.toList());
     }
 
-    @NotNull
     private List<FieldSpec> getRequiredFieldSpecs() {
         return element.getEnclosedElements().stream()
                 .filter(it -> it.getKind().isField())
@@ -101,13 +98,12 @@ public class MockFieldParser implements Parser<List<FieldSpec>> {
                             TypeName paramType = TypeName.get(it.asType());
 
                             return FieldSpec.builder(paramType, paramName)
-                                    .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                                    .addModifiers(Modifier.PRIVATE)
                                     .build();
                         }
                 ).collect(Collectors.toList());
     }
 
-    @NotNull
     private List<FieldSpec> getFieldSpecs(ExecutableElement constructorElement) {
         return constructorElement.getParameters().stream()
                 .map(it -> {
@@ -115,7 +111,7 @@ public class MockFieldParser implements Parser<List<FieldSpec>> {
                             TypeName paramType = TypeName.get(it.asType());
 
                             return FieldSpec.builder(paramType, paramName)
-                                    .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+                                    .addModifiers(Modifier.PRIVATE)
                                     .build();
                         }
                 ).collect(Collectors.toList());

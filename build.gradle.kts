@@ -10,7 +10,7 @@ allprojects {
     }
 
     group = "io.github.taes-k"
-    version = "0.0.3"
+    version = "0.0.4"
 }
 
 subprojects {

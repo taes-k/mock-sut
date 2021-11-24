@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +38,8 @@ public class MockSutProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        this.trees = Trees.instance(unwrap(processingEnv));
+        ProcessingEnvironment env = unwrap(processingEnv);
+        this.trees = Trees.instance(env);
     }
 
     private static ProcessingEnvironment unwrap(ProcessingEnvironment processingEnv) {
@@ -85,7 +87,11 @@ public class MockSutProcessor extends AbstractProcessor {
             if (element.getKind() != ElementKind.CLASS) {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "MockSut have to annotated on class");
             } else {
-                generateCode((TypeElement)element);
+                try {
+                    generateCode((TypeElement)element);
+                } catch (Exception e) {
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, Arrays.toString(e.getStackTrace()));
+                }
             }
         }
 
@@ -99,19 +105,22 @@ public class MockSutProcessor extends AbstractProcessor {
         String generateClassName = String.format("%s" + SUFFIX_CLASS_NAME, className);
 
         ParserFactory parserFactory = new ParserFactory(element, trees, className, generateClassName);
+        TypeSpec builderClass = parserFactory.getBuilderClassType();
+
         List<FieldSpec> fieldSpecs = parserFactory.getFieldSpecs();
-        MethodSpec constructorSpec = parserFactory.getConstructorSpec();
+        List<MethodSpec> constructorSpecs = parserFactory.getConstructorSpecs();
         List<MethodSpec> getterMethodSpecs = parserFactory.getGetterMethodSpecs();
-        List<MethodSpec> setSpyMethodSpecs = parserFactory.getSetSpyMethodSpecs();
         MethodSpec resetMethodSpec = parserFactory.getResetMethodSpecs();
+        MethodSpec builderMethodSpec = parserFactory.getBuilderMethodSpec();
 
         TypeSpec classSpec = TypeSpec.classBuilder(generateClassName)
             .addModifiers(Modifier.PUBLIC)
+            .addType(builderClass)
             .addFields(fieldSpecs)
-            .addMethod(constructorSpec)
+            .addMethods(constructorSpecs)
             .addMethods(getterMethodSpecs)
-            .addMethods(setSpyMethodSpecs)
             .addMethod(resetMethodSpec)
+            .addMethod(builderMethodSpec)
             .build();
 
         generateFile(packageName, classSpec);

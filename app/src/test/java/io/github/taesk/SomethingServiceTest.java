@@ -10,8 +10,10 @@ import io.github.taesk.app.SomethingService;
 import io.github.taesk.app.SomethingServiceMockSutFactory;
 
 class SomethingServiceTest {
-    private final SomethingServiceMockSutFactory sutFactory = new SomethingServiceMockSutFactory()
-        .withSpySampleService1();
+    private final SomethingServiceMockSutFactory sutFactory =
+        SomethingServiceMockSutFactory.builder()
+            .withSpySampleService1()
+            .build();
     private final SomethingService sut = sutFactory.getSut();
 
     @BeforeEach

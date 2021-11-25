@@ -20,6 +20,7 @@ subprojects {
     }
 
     java.sourceCompatibility = JavaVersion.VERSION_1_8
+    java.targetCompatibility = JavaVersion.VERSION_1_8
 
     sourceSets.main {
         java.srcDirs("src/main/java", "src/main/kotlin")

@@ -1,14 +1,12 @@
 package io.github.taesk;
 
-import com.google.auto.service.AutoService;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
-import io.github.taesk.parser.ParserFactory;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
@@ -17,15 +15,27 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import com.google.auto.service.AutoService;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
+import com.sun.source.util.Trees;
+import io.github.taesk.parser.ParserFactory;
 
 @SuppressWarnings("unused")
 @AutoService(Processor.class)
 public class MockSutProcessor extends AbstractProcessor {
     static final String SUFFIX_CLASS_NAME = "MockSutFactory";
+    private Trees trees;
+
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+        this.trees = Trees.instance(processingEnv);
+    }
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
@@ -48,7 +58,7 @@ public class MockSutProcessor extends AbstractProcessor {
             if (element.getKind() != ElementKind.CLASS) {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "MockSut have to annotated on class");
             } else {
-                generateCode((TypeElement) element);
+                generateCode((TypeElement)element);
             }
         }
 
@@ -68,12 +78,12 @@ public class MockSutProcessor extends AbstractProcessor {
         MethodSpec resetMethodSpec = parserFactory.getResetMethodSpecs();
 
         TypeSpec classSpec = TypeSpec.classBuilder(generateClassName)
-                .addModifiers(Modifier.PUBLIC)
-                .addFields(fieldSpecs)
-                .addMethod(constructorSpec)
-                .addMethods(getterMethodSpecs)
-                .addMethod(resetMethodSpec)
-                .build();
+            .addModifiers(Modifier.PUBLIC)
+            .addFields(fieldSpecs)
+            .addMethod(constructorSpec)
+            .addMethods(getterMethodSpecs)
+            .addMethod(resetMethodSpec)
+            .build();
 
         generateFile(packageName, classSpec);
     }
@@ -82,8 +92,8 @@ public class MockSutProcessor extends AbstractProcessor {
     private void generateFile(String packageName, TypeSpec classSpec) {
         try {
             JavaFile.builder(packageName, classSpec)
-                    .build()
-                    .writeTo(processingEnv.getFiler());
+                .build()
+                .writeTo(processingEnv.getFiler());
         } catch (IOException e) {
             String message = String.format("Generate %s Failed", classSpec.name);
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, message);

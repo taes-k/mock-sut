@@ -29,6 +29,7 @@ import io.github.taesk.parser.ParserFactory;
 @AutoService(Processor.class)
 public class MockSutProcessor extends AbstractProcessor {
     static final String SUFFIX_CLASS_NAME = "MockSutFactory";
+    // com.sun.source 안쓸수 있는 방법?
     private Trees trees;
 
     @Override

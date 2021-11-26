@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
@@ -22,20 +21,12 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import com.sun.source.util.Trees;
 import io.github.taesk.parser.ParserFactory;
 
 @SuppressWarnings("unused")
 @AutoService(Processor.class)
 public class MockSutProcessor extends AbstractProcessor {
     static final String SUFFIX_CLASS_NAME = "MockSutFactory";
-    private Trees trees;
-
-    @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
-        this.trees = Trees.instance(processingEnv);
-    }
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {

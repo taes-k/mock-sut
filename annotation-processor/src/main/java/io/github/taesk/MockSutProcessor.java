@@ -73,6 +73,7 @@ public class MockSutProcessor extends AbstractProcessor {
         String generateClassName = String.format("%s" + SUFFIX_CLASS_NAME, className);
 
         ParserFactory parserFactory = new ParserFactory(element, trees, className, generateClassName);
+        TypeSpec builderClass = parserFactory.getBuilderClassType();
         List<FieldSpec> fieldSpecs = parserFactory.getFieldSpecs();
         MethodSpec constructorSpec = parserFactory.getConstructorSpec();
         List<MethodSpec> getterMethodSpecs = parserFactory.getGetterMethodSpecs();
@@ -81,6 +82,7 @@ public class MockSutProcessor extends AbstractProcessor {
 
         TypeSpec classSpec = TypeSpec.classBuilder(generateClassName)
             .addModifiers(Modifier.PUBLIC)
+            .addType(builderClass)
             .addFields(fieldSpecs)
             .addMethod(constructorSpec)
             .addMethods(getterMethodSpecs)

@@ -12,29 +12,29 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import com.sun.source.util.Trees;
 import io.github.taesk.parser.clazz.BuilderClassParser;
-import io.github.taesk.parser.constructor.ConstructorParser;
+import io.github.taesk.parser.constructor.AllParameterConstructorParser;
+import io.github.taesk.parser.constructor.NonParameterConstructorParser;
 import io.github.taesk.parser.field.MockFieldParser;
 import io.github.taesk.parser.field.SutFieldParser;
+import io.github.taesk.parser.method.BuilderMethodParser;
 import io.github.taesk.parser.method.GetterMethodParser;
 import io.github.taesk.parser.method.ResetMethodParser;
-import io.github.taesk.parser.method.WithSpyMethodParser;
 
 public class ParserFactory {
-    private final String originClassName;
-    private final String generateClassName;
-    private final BuilderClassParser builderClassParser;
     private final MockFieldParser mockFieldParser;
     private final SutFieldParser sutFieldParser;
-    private final ConstructorParser constructorParser;
+    private final NonParameterConstructorParser nonParameterConstructorParser;
+    private final AllParameterConstructorParser allParameterConstructorParser;
+    private final BuilderClassParser builderClassParser;
+    private final BuilderMethodParser builderMethodParser;
 
     public ParserFactory(TypeElement element, Trees trees, String originClassName, String generateClassName) {
-        this.originClassName = originClassName;
-        this.generateClassName = generateClassName;
-
         mockFieldParser = new MockFieldParser(element, trees);
         sutFieldParser = new SutFieldParser(element);
-        constructorParser = new ConstructorParser(element, mockFieldParser);
+        nonParameterConstructorParser = new NonParameterConstructorParser(element, mockFieldParser);
+        allParameterConstructorParser = new AllParameterConstructorParser(element, mockFieldParser);
         builderClassParser = new BuilderClassParser(element, mockFieldParser, generateClassName);
+        builderMethodParser = new BuilderMethodParser(generateClassName);
     }
 
     public List<FieldSpec> getFieldSpecs() {
@@ -56,8 +56,8 @@ public class ParserFactory {
         return sutFieldParser.invoke();
     }
 
-    public MethodSpec getConstructorSpec() {
-        return constructorParser.invoke();
+    public List<MethodSpec> getConstructorSpecs() {
+        return List.of(nonParameterConstructorParser.invoke(), allParameterConstructorParser.invoke());
     }
 
     public List<MethodSpec> getGetterMethodSpecs() {
@@ -68,8 +68,8 @@ public class ParserFactory {
         return new ResetMethodParser(getMockFieldSpecs()).invoke();
     }
 
-    public List<MethodSpec> getSetSpyMethodSpecs() {
-        return new WithSpyMethodParser(originClassName, generateClassName, getMockFieldSpecs()).invoke();
+    public MethodSpec getBuilderMethodSpec() {
+        return builderMethodParser.invoke();
     }
 
 }

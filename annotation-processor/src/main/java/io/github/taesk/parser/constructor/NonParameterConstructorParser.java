@@ -13,11 +13,11 @@ import javax.lang.model.element.TypeElement;
 import java.util.Arrays;
 import java.util.List;
 
-public class ConstructorParser implements Parser<MethodSpec> {
+public class NonParameterConstructorParser implements Parser<MethodSpec> {
     private final TypeElement element;
     private final MockFieldParser mockFieldParser;
 
-    public ConstructorParser(TypeElement element, MockFieldParser mockFieldParser) {
+    public NonParameterConstructorParser(TypeElement element, MockFieldParser mockFieldParser) {
         this.element = element;
         this.mockFieldParser = mockFieldParser;
     }

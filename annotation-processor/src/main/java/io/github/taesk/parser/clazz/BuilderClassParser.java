@@ -39,7 +39,7 @@ public class BuilderClassParser implements Parser<TypeSpec> {
                     .initializer("$T.mock($T.class)", Mockito.class, it.type)
                     .build()
             ).collect(Collectors.toList());
-        
+
         List<MethodSpec> setterMethodSpecs = mockFieldSpecs.stream()
             .map(it -> MethodSpec.methodBuilder(it.name)
                 .addModifiers(Modifier.PUBLIC)
@@ -47,7 +47,7 @@ public class BuilderClassParser implements Parser<TypeSpec> {
                 .addParameter(it.type, it.name)
                 .addStatement(
                     CodeBlock.builder()
-                        .add("this.$N = $N;\n", it, Mockito.class, it.type)
+                        .add("this.$N = $N;\n", it, it)
                         .add("return this")
                         .build())
                 .build()
@@ -56,7 +56,6 @@ public class BuilderClassParser implements Parser<TypeSpec> {
             .map(it -> MethodSpec.methodBuilder(String.format("withSpy%s", StringUtils.capitalize(it.name)))
                 .addModifiers(Modifier.PUBLIC)
                 .returns(TypeVariableName.get(builderClassName))
-                .addParameter(it.type, it.name)
                 .addStatement(
                     CodeBlock.builder()
                         .add("this.$N = $T.spy($T.class);\n", it, Mockito.class, it.type)
@@ -67,13 +66,13 @@ public class BuilderClassParser implements Parser<TypeSpec> {
 
         CodeBlock sutFieldInitStatement =
             CodeBlock.builder()
-                .add("this.sut = new $T(", ClassName.get(element))
+                .add("return new $T(", ClassName.bestGuess(generateClassName))
                 .add(mockFieldSpecs.stream()
                     .map(it -> CodeBlock.of("$N", it))
                     .reduce((a, b) -> CodeBlock.join(Arrays.asList(a, b), ", "))
                     .orElseGet(() -> CodeBlock.of(""))
                 )
-                .add(")")
+                .add(");")
                 .build();
         MethodSpec buildMethodSpec = MethodSpec.methodBuilder("build")
             .addModifiers(Modifier.PUBLIC)

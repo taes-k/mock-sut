@@ -1,6 +1,7 @@
 package io.github.taesk;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +60,11 @@ public class MockSutProcessor extends AbstractProcessor {
             if (element.getKind() != ElementKind.CLASS) {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "MockSut have to annotated on class");
             } else {
-                generateCode((TypeElement)element);
+                try {
+                    generateCode((TypeElement)element);
+                } catch (Exception e) {
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, Arrays.toString(e.getStackTrace()));
+                }
             }
         }
 

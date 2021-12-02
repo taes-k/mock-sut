@@ -39,8 +39,7 @@ public class MockSutProcessor extends AbstractProcessor {
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         ProcessingEnvironment env = unwrap(processingEnv);
-        this.trees = Trees.instance(processingEnv);
-
+        this.trees = Trees.instance(env);
     }
 
     private static ProcessingEnvironment unwrap(ProcessingEnvironment processingEnv) {

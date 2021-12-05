@@ -1,6 +1,9 @@
 package io.github.taesk;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +28,7 @@ import com.squareup.javapoet.TypeSpec;
 import com.sun.source.util.Trees;
 import io.github.taesk.parser.ParserFactory;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused"})
 @AutoService(Processor.class)
 public class MockSutProcessor extends AbstractProcessor {
     static final String SUFFIX_CLASS_NAME = "MockSutFactory";
@@ -34,7 +37,31 @@ public class MockSutProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        this.trees = Trees.instance(processingEnv);
+        this.trees = Trees.instance(unwrap(processingEnv));
+    }
+
+    private static ProcessingEnvironment unwrap(ProcessingEnvironment processingEnv) {
+        if (Proxy.isProxyClass(processingEnv.getClass())) {
+            InvocationHandler invocationHandler = Proxy.getInvocationHandler(processingEnv);
+            try {
+                Field field = invocationHandler.getClass().getDeclaredField("val$delegateTo");
+                field.setAccessible(true);
+                Object o = field.get(invocationHandler);
+                if (o instanceof ProcessingEnvironment) {
+                    return (ProcessingEnvironment)o;
+                } else {
+                    processingEnv.getMessager()
+                        .printMessage(Diagnostic.Kind.ERROR,
+                            "got " + o.getClass() + " expected instanceof com.sun.tools.javac.processing.JavacProcessingEnvironment");
+                    return null;
+                }
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+                return null;
+            }
+        } else {
+            return processingEnv;
+        }
     }
 
     @Override

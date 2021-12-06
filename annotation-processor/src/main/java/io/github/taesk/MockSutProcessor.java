@@ -1,16 +1,12 @@
 package io.github.taesk;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
@@ -33,38 +29,6 @@ import io.github.taesk.parser.ParserFactory;
 @AutoService(Processor.class)
 public class MockSutProcessor extends AbstractProcessor {
     static final String SUFFIX_CLASS_NAME = "MockSutFactory";
-    private Trees trees;
-
-    @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
-        ProcessingEnvironment env = unwrap(processingEnv);
-        this.trees = Trees.instance(env);
-    }
-
-    private static ProcessingEnvironment unwrap(ProcessingEnvironment processingEnv) {
-        if (Proxy.isProxyClass(processingEnv.getClass())) {
-            InvocationHandler invocationHandler = Proxy.getInvocationHandler(processingEnv);
-            try {
-                Field field = invocationHandler.getClass().getDeclaredField("val$delegateTo");
-                field.setAccessible(true);
-                Object o = field.get(invocationHandler);
-                if (o instanceof ProcessingEnvironment) {
-                    return (ProcessingEnvironment)o;
-                } else {
-                    processingEnv.getMessager()
-                        .printMessage(Diagnostic.Kind.ERROR,
-                            "got " + o.getClass() + " expected instanceof com.sun.tools.javac.processing.JavacProcessingEnvironment");
-                    return null;
-                }
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
-                return null;
-            }
-        } else {
-            return processingEnv;
-        }
-    }
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
@@ -104,7 +68,7 @@ public class MockSutProcessor extends AbstractProcessor {
         String packageName = ClassName.get(element).packageName();
         String generateClassName = String.format("%s" + SUFFIX_CLASS_NAME, className);
 
-        ParserFactory parserFactory = new ParserFactory(element, trees, className, generateClassName);
+        ParserFactory parserFactory = new ParserFactory(element, Trees.instance(processingEnv), className, generateClassName);
         TypeSpec builderClass = parserFactory.getBuilderClassType();
 
         List<FieldSpec> fieldSpecs = parserFactory.getFieldSpecs();

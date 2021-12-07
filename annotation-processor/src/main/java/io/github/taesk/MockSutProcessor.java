@@ -84,6 +84,11 @@ public class MockSutProcessor extends AbstractProcessor {
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(MockSut.class);
 
         for (Element element : elements) {
+            // String path = trees.getPath(element)
+            //     .getCompilationUnit()
+            //     .getSourceFile()
+            //     .getName();
+            // processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "pathhh : " + path);
             if (element.getKind() != ElementKind.CLASS) {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "MockSut have to annotated on class");
             } else {

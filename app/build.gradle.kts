@@ -15,22 +15,21 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
 
-val generatedSources = "$buildDir/generated/sources/annotationProcessor/java/test"
-val generatedOutputDir = file(generatedSources)
+val generatedSourcePath = "$buildDir/generated/sources/annotationProcessor/java/test"
+val generatedOutputDir = file(generatedSourcePath)
 
 tasks.withType<JavaCompile> {
     doFirst {
         generatedOutputDir.exists() || generatedOutputDir.mkdirs()
-        options.compilerArgs = listOf("-s", generatedSources)
+        options.compilerArgs = listOf("-s", generatedSourcePath)
     }
-    setExcludes(listOf(generatedSources + "/**"))
+//    options.annotationProcessorGeneratedSourcesDirectory = generatedOutputDir
+//    outputs.dir(generatedSourcePath)
 }
 
-sourceSets {
-    test {
-        java {
-            srcDir("src/test/java")
-            srcDir(generatedOutputDir)
-        }
-    }
+sourceSets.main {
+    java.exclude(generatedSourcePath + "/**")
+}
+sourceSets.test {
+    java.srcDirs(generatedOutputDir)
 }

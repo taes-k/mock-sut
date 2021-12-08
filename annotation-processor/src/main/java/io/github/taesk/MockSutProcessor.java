@@ -84,11 +84,6 @@ public class MockSutProcessor extends AbstractProcessor {
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(MockSut.class);
 
         for (Element element : elements) {
-            // String path = trees.getPath(element)
-            //     .getCompilationUnit()
-            //     .getSourceFile()
-            //     .getName();
-            // processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "pathhh : " + path);
             if (element.getKind() != ElementKind.CLASS) {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "MockSut have to annotated on class");
             } else {
@@ -128,11 +123,11 @@ public class MockSutProcessor extends AbstractProcessor {
             .addMethod(builderMethodSpec)
             .build();
 
-        generateFile(packageName, classSpec);
+        generateFile(packageName, classSpec, element);
     }
 
     @SuppressWarnings("java:S112")
-    private void generateFile(String packageName, TypeSpec classSpec) {
+    private void generateFile(String packageName, TypeSpec classSpec, TypeElement element) {
         try {
             JavaFile.builder(packageName, classSpec)
                 .build()

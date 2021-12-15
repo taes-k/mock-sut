@@ -1,9 +1,9 @@
 # mock-sut
 
-유닛테스트 코드 작성시 반복적으로 작성되는 `mock`객체 지정 보일러플레이트 코드들을 자동화해줍니다.  
-annotation-processing 방식으로 mock 객체를 자동 생성해, 유닛테스트의 대상이 되는 클래스 (`SUT`)를 간편하게 테스트 대상객체로 선언 할 수 있습니다.
+유닛테스트 코드 작성시 반복적으로 작성되는 `mocking 객체`를 간편하게 사용 할 수 있도록 해줍니다.  
+annotation-processing 방식으로 mock 객체를 자동 생성해, 유닛테스트 타겟 클래스를 간편하게 선언 할 수 있습니다.
 
-### How to use
+### Getting started
 
 ```gradle
 repositories {
@@ -18,7 +18,7 @@ dependencies {
 }
 ```
 
-### Example
+### Examples
 
 As-Is
 
@@ -102,3 +102,12 @@ class SomethingServiceTest {
 
 ---
 
+### Features
+
+- `@MockSut`
+- `**MockSutFactory`
+  - `get**(): propertyField`
+  - `getSut(): targetField`
+  - `set**(field)`
+  - `withSpy**(field)`
+  - `reset()`
